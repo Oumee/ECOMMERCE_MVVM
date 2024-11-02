@@ -1,0 +1,86 @@
+﻿@page
+
+@model DOTNETECOMMERCE.Pages.CartModel
+
+@{
+}
+
+<h2>Panier</h2>
+<style>
+    .quantity-input {
+        width: 60px;
+        height: 38px;
+        margin: 0 5px;
+                    }
+</style>
+
+ 
+
+@if (Model.listProducts.Count == 0)
+{
+    <p>Votre panier est vide.</p>
+}
+else
+{
+    <div class="container">
+        <div class="row">
+            @foreach (var item in Model.listProducts)
+            {
+                <div class="col-md-4 col-lg-3 mb-4">
+                    <!-- Utilisation de grilles pour le responsive -->
+                    <div class="card h-100">
+                        <!-- Image du produit -->
+                        <img src="@item.ImageUrl" class="card-img-top" alt="@item.Name" style="height: 150px; object-fit: cover;">
+
+                        <div class="card-body">
+
+                            <!-- Nom et description -->
+                            <h5 class="card-title">@item.Name</h5>
+                            <p class="card-text">@item.Description</p>
+                            <p class="card-text fw-bold">@item.Price DH</p>
+
+                            <form method="post"  asp-page="Cart">
+                            <!-- Contrôles de quantité -->
+                            <div class="d-flex align-items-center justify-content-center mb-3">
+                                <input type="hidden" name="id" value="@item.Id" />
+                               
+                                     <button class="btn btn-outline-secondary" type="submit" asp-page-handler="RemoveQuantity">-</button>
+
+                                    <input type="number"  class="form-control text-center quantity-input mx-2" id="productQuantity_@item.Id" name="quantity"  min="1" max="@item.Quantity" value="@item.Quantity" style="max-width: 70px;" readonly  >
+                                    <button class="btn btn-outline-secondary" type="submit" asp-page-handler="AddQuantity">+</button>
+                            </div>
+                            </form>
+
+                            <!-- Bouton de suppression -->
+                            <form method="post" asp-page="Cart" asp-page-handler="Delete" enctype="multipart/form-data">
+                                <input type="hidden" name="id" value="@item.Id" />
+                                <button type="submit" class="btn btn-danger w-100">Supprimer</button>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <p>Total produits : @Model.listProducts.Count</p>
+}
+
+<script>
+    function increaseQuantity(id) {
+        const quantityInput = document.getElementById(`productQuantity_${id}`);
+        let currentValue = parseInt(quantityInput.value) || 1;
+        if (currentValue < parseInt(quantityInput.max)) {
+            quantityInput.value = currentValue + 1;
+        }
+    }
+
+    function decreaseQuantity(id) {
+        const quantityInput = document.getElementById(`productQuantity_${id}`);
+        let currentValue = parseInt(quantityInput.value) || 1;
+        if (currentValue > parseInt(quantityInput.min)) {
+            quantityInput.value = currentValue - 1;
+        }
+    }
+</script>

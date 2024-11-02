@@ -1,0 +1,75 @@
+﻿@page
+
+@model IndexModel
+
+@{
+    ViewData["Title"] = "Home page";
+ }
+
+@if (TempData["success"] != null)
+{
+    <div id="notification" class="alert alert-success">
+        @TempData["success"]
+    </div>
+}
+
+@if (TempData["dejaexiste"] != null)
+{
+
+    <div id="notification" class="alert alert-danger">
+        @TempData["dejaexiste"]
+    </div>
+
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">ECOMMERCE</h2>
+
+<form   method="get"  >
+        <input type="text" name="searchBar" id="searchBar" placeholder="Rechercher un produit..." class="form-control mt-2" />
+        <button type="submit">OK</button>   
+</form>
+
+        <div class="row">
+        @foreach (var product in Model.listProducts)
+        {
+           
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4 p-1 product-item" data-name="@product.Name"  >
+              
+                <div class="card shadow-sm h-100">
+                     <img class="card-img-top" src="@product.ImageUrl" alt="@product.Name" style="height: 200px; object-fit: cover;">
+
+                     <div class="card-body">
+
+                            <h5 class="card-title text-center"> @product.Name </h5>
+                        <h6 class="card-title text-center"> @product.Category.Name </h6>
+                        <h6 class="card-title text-center"> @product.Price DH </h6>
+
+                            <form   method="post">
+                                <input type="hidden" name="IDproduct" value="@product.Id" />
+                                <button type="submit" class="btn btn-primary"> Ajouter au panier </button>
+                            </form>
+
+                            <div class="d-flex justify-content-between">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    
+    // Optionnel : Masquer automatiquement la notification après un délai
+    setTimeout(() => {
+        const notification = document.getElementById("notification");
+        if (notification) {
+            notification.style.display = "none";
+        }
+    }, 3000); // Masque après 3 secondes
+
+</script>
+
+ 
